@@ -1,0 +1,40 @@
+IF A NUMBERS UNIT DIGITS END WITH 2 OR 3 OR 7 OR 8 THEN YHE NUM IS NOT A PERFECT SQUARE
+THEN WHAT WE DO IS BINARY SEARCH  LET SAY 25 IS A NUM GIVEN AND WE HAVE TO FIND IF IT IS A PERFECT SQUARE
+FIRST  VAL IS 1
+LAST VAL IS THE NUM
+THEN WE DO A BINARY SEARCH ( BY SQUARING THE MID VALUE)
+THEN ITS THE BASIC BINARY SEARCH PROBLEM
+
+class Solution {
+    public boolean isPerfectSquare(int num) {
+        if (num==0)
+            
+        {
+            return false;
+        }
+        int a = num%10;
+        if(a==2||a==3||a==7||a==8){
+            return false;
+        }
+        int last=num;
+        int first= 1;
+        while(first<=last)
+        {
+         long mid=first+(last-first)/2;
+         long square=mid*mid;
+        if(square==num){
+            return true;
+        }
+        else if (square<num)
+        {
+            
+            first=(int)mid+1;
+        }
+        else 
+        {
+           last=(int)mid-1; 
+        }
+        }
+        return false;
+    }
+}
