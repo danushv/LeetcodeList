@@ -1,0 +1,30 @@
+In this program what we have to find is the peak of a mountain
+the condition is A[0] < A[1] < ... A[i-1] < A[i] > A[i+1] > ... > A[A.length - 1].
+So there are two ways to solve this problem
+the first way is to do a linear search and can find the solution
+the second way is to do binary search
+
+if the mid value is lesser than mid +1 value the it means we dint yet reach the peak value
+so we adjust the left value to mid +1
+
+else 
+we adjst the right value;
+
+the return cant be both left or right 
+because at that poin the left and right will point to the same i
+
+class Solution {
+    public int peakIndexInMountainArray(int[] A) {
+        int left=0;
+        int right=A.length-1;
+        while(left<right)
+        {
+            int mid=left+(right-left)/2;
+            if (A[mid]<A[mid+1])
+                left=mid+1;
+            else 
+                right=mid;
+        }
+        return left;
+    }
+}
