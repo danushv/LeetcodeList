@@ -1,0 +1,34 @@
+The inputs are mainly two things 1 is target array which should be obtaibed at the end
+The Second input is n which tells us the input size or the last element
+Also it is given that it is already in increasing number
+
+
+
+
+use a for loop check that is required in the target if required thatn add push else add push pop
+
+
+class Solution {
+    public List<String> buildArray(int[] target, int n) {
+     List <String> danush=new ArrayList();
+        int index=0;
+        int len=target.length;
+        for(int i=1;i<=n;i++)
+        {
+            if(index>=len)
+                break;
+            if(i==target[index])
+            {
+                danush.add("Push");
+            index++;
+            }
+            else 
+            {
+                danush.add("Push");
+                danush.add("Pop");
+                //index++;
+            }
+        }
+        return danush;
+    }
+}
