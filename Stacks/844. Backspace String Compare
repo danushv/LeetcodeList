@@ -1,0 +1,32 @@
+In this problem what we are expected to do is String manipulation
+Which means if u get to c '#' then we have to backspace or delete the previous element
+
+So lets see a step by step implementation
+
+class Solution {
+    public boolean backspaceCompare(String S, String T) {
+        return develop(S).equals(develop(T));
+    }
+    //So lets create a function which does this operation
+    public String develop(String A)
+    {
+    
+    // i am creating a stack
+        Stack<Character> ans=new Stack();
+        // Since it is a string and are immutable we have to convert to char array and traverse in that array elements will be stored as Char
+        for (char s:A.toCharArray()){
+            
+            if(s!='#')
+            {
+                ans.push(s);
+            }
+            else if(!ans.empty())
+            {
+                ans.pop();
+            }
+        }
+         so we work in char thats why i have created a character stack but i have to return as string so now we can easily convert it
+        return String.valueOf(ans);
+    }
+}
+    
