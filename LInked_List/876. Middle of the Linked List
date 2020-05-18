@@ -1,0 +1,31 @@
+we have to find the middle value of a linked list
+what we would do is have two pointers slow and fast 
+slow pointer goes one by one 
+where as fast pointers does two skips at a time
+and we return the slow pointers value
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode middleNode(ListNode head) {
+        ListNode slow=head;
+        ListNode fast=head;
+        
+        //int length;
+        while(fast!=null && fast.next!=null)
+        {
+            slow = slow.next;
+            fast=fast.next.next;
+            
+        }
+        return slow;
+    }
+}
