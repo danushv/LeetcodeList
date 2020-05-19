@@ -1,0 +1,48 @@
+we have to find that if the anagram is present in or not
+
+so we create a array to find the frequency 
+
+condition to be satisfied to become a anagram is 1. same size 2. same frequency 3 can be of diffrent orders
+
+so we use sliding window algorithm
+
+class Solution {
+    public boolean checkInclusion(String s1, String s2) {
+        int n1=s1.length();
+        int n2=s2.length();
+        if(n1>n2)
+        {
+            return false;
+        }
+        //creating a array to find the frequency
+        int [] frequency1=new int [26];
+        int [] frequency2=new int [26];
+        
+        //running a for loop for the small size string and incrementing the frequency
+        
+        for(int i=0;i<n1;i++)
+        {
+            frequency1[s1.charAt(i)-'a']++;
+            frequency2[s2.charAt(i)-'a']++;
+        }
+        boolean f= false;
+        for(int i=n1;i<n2;i++)
+        {
+        //this checks if two strings frequency are same or not 
+            if(Arrays.equals(frequency1,frequency2))
+            {
+                return true;
+            }
+            
+           // if no then we slide through by incrementing the current frequency and decrement a fequency it will check in a single pass
+            // for exampple in array 121546--> first 121 the 0th index 1 will be deleted then 215 will be checked and afterwords 154 will be checked
+            frequency2[s2.charAt(i)-'a']++;
+            frequency2[s2.charAt(i-n1)-'a']--;
+        }
+        if(Arrays.equals(frequency1,frequency2))
+        {
+            return true;
+        }
+        return f;
+    }
+}
