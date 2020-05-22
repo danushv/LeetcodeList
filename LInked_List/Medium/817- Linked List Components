@@ -1,0 +1,35 @@
+there will be a linked list and a subset given 
+1 if it is a single element and contains in the subset given then increment the output
+2 if it is element contains in the subset but its connectes 0-1 or 2-3 then its consider as a single element
+output the values
+
+class Solution {
+    public int numComponents(ListNode head, int[] G) {
+    // we are using hash set for ast acceesss of elements and it doesnot allows us to store duplicate values
+        Set<Integer> result=new HashSet<Integer> ();
+        for(int g:G)
+        {
+            result.add(g);
+        }
+        int accumalator=0;
+        //this loop traverse through complete list 
+        while(head!=null)
+        {
+        head val and result contains the same val then we check for the connection
+        if(result.contains(head.val))
+        {
+            accumalator++;
+        // thus is the connection checking one
+        while(head!=null&&result.contains(head.val))
+        {
+            head=head.next;
+        }
+        }
+        else
+        {
+            head=head.next;
+        }
+        }
+        return accumalator;
+    }
+}
