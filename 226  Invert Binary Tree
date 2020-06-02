@@ -1,0 +1,33 @@
+// recurrsion is the concept used in this technique
+// in stack (4->left(2)->left(1)->left(null) after this null ie right of (1) is checked which is too null then invertion of both 
+// null occurs
+// after that 1 is popped out now it moves to (2) right which is three then the next two lines of invertion occurs
+// after the it moves to 4 -> right same things happens and atlast (2) and (7) will be inverted
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public TreeNode invertTree(TreeNode root) {
+        if(root==null)
+        {
+            return root;
+        }
+        TreeNode left=invertTree(root.left);
+        TreeNode right=invertTree(root.right);
+        root.right=left;
+        root.left=right;
+        return root;
+    }
+}
