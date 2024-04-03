@@ -22,7 +22,7 @@ public class exp6_2 {
     //.setMaster("local[*]");
     JavaSparkContext context = new JavaSparkContext(sparkConf);
 
-    //read edges and remove empty line
+ 
     JavaRDD<String> file = context.textFile(INPUT_PATH);
     JavaRDD<String> cleaned = file.filter(
       new Function<String, Boolean>() {
@@ -32,21 +32,15 @@ public class exp6_2 {
       }
     );
 
-    //Store edges with both way because this is undirected graph
-    JavaPairRDD<Long, Long> edges = cleaned.flatMapToPair(
+    JavaPairRDD<Long, Long> ext = cleaned.flatMapToPair(
       new PairFlatMapFunction<String, Long, Long>() {
         @SuppressWarnings("unchecked")
         public Iterator<Tuple2<Long, Long>> call(String s) {
-          String[] st = s.trim().replaceAll("\\s+", " ").split(" ");
-          return Arrays
-            .asList(
+          String[] str = s.trim().replaceAll("\\s+", " ").split(" ");
+          return Arrays.asList(new Tuple2<Long, Long>(Long.parseLong(str[0]), Long.parseLong(str[1])),
               new Tuple2<Long, Long>(
-                Long.parseLong(st[0]),
-                Long.parseLong(st[1])
-              ),
-              new Tuple2<Long, Long>(
-                Long.parseLong(st[1]),
-                Long.parseLong(st[0])
+                Long.parseLong(str[1]),
+                Long.parseLong(str[0])
               )
             )
             .iterator();
@@ -54,10 +48,10 @@ public class exp6_2 {
       }
     );
 
-    //group edge by start node
-    JavaPairRDD<Long, Iterable<Long>> tri = edges.groupByKey();
+    
+    JavaPairRDD<Long, Iterable<Long>> tri = ext.groupByKey();
 
-    //populate the record with (key, value)= (the neighbor of the key, input tuple)
+    
     JavaPairRDD<Long, Tuple2<Long, Iterable<Long>>> temp = tri.flatMapToPair(
       new PairFlatMapFunction<Tuple2<Long, Iterable<Long>>, Long, Tuple2<Long, Iterable<Long>>>() {
         public Iterator<Tuple2<Long, Tuple2<Long, Iterable<Long>>>> call(
@@ -67,9 +61,7 @@ public class exp6_2 {
           List<Tuple2<Long, Tuple2<Long, Iterable<Long>>>> output = new ArrayList<Tuple2<Long, Tuple2<Long, Iterable<Long>>>>();
 
           for (Long value : values) {
-            output.add(
-              new Tuple2<Long, Tuple2<Long, Iterable<Long>>>(value, s)
-            );
+            output.add(new Tuple2<Long, Tuple2<Long, Iterable<Long>>>(value, s) );
           }
 
           return output.iterator();
@@ -77,53 +69,38 @@ public class exp6_2 {
       }
     );
 
-    //group them by key
     JavaPairRDD<Long, Iterable<Tuple2<Long, Iterable<Long>>>> grouped = temp.groupByKey();
 
-    //find the triangle
-    JavaRDD<Tuple3<Long, Long, Long>> temp2 = grouped.flatMap(
+    
+    JavaRDD<Tuple3<Long, Long, Long>> t2 = grouped.flatMap(
       new FlatMapFunction<Tuple2<Long, Iterable<Tuple2<Long, Iterable<Long>>>>, Tuple3<Long, Long, Long>>() {
-        public Iterator<Tuple3<Long, Long, Long>> call(
-          Tuple2<Long, Iterable<Tuple2<Long, Iterable<Long>>>> s
-        ) {
-          //key of the input
-          long key = s._1;
-          //value of the input
-          Iterable<Tuple2<Long, Iterable<Long>>> values = s._2;
-          //hashSet to store which node is reachable
+        public Iterator<Tuple3<Long, Long, Long>> call(Tuple2<Long, Iterable<Tuple2<Long, Iterable<Long>>>> s) {
           HashSet<Long> s = new HashSet<Long>();
+          long key = s._1;
+       
+          Iterable<Tuple2<Long, Iterable<Long>>> values = s._2;
+       
           for (Tuple2<Long, Iterable<Long>> value : values) {
             s.add(value._1);
           }
-
-          //add possible triangle
           List<Tuple3<Long, Long, Long>> output = new ArrayList<Tuple3<Long, Long, Long>>();
           for (Tuple2<Long, Iterable<Long>> value : values) {
             for (Long x : value._2) {
               if (s.contains(x)) {
-                Long[] tria = { key, value._1, x };
-                //sort the nodes in order to delete the duplicate later
-                Arrays.sort(tria);
-                output.add(
-                  new Tuple3<Long, Long, Long>(tria[0], tria[1], tria[2])
-                );
-              }
+                Long[] tria = { key, value._1, x }; Arrays.sort(tria);
+                output.add(new Tuple3<Long, Long, Long>(tria[0], tria[1], tria[2]) );}
             }
           }
           return output.iterator();
         }
       }
     );
+    JavaRDD<Tuple3<Long, Long, Long>> t3 = t2.distinct();
 
-    //eliminate duplicate triangles
-    JavaRDD<Tuple3<Long, Long, Long>> t3 = temp2.distinct();
-
-    //Store the number of triangle
     List<Long> list = new ArrayList<Long>();
     list.add(t3.count());
     JavaRDD<Long> result = context.parallelize(list);
 
-    //save
     result.saveAsTextFile(OUTPUT_PATH);
     context.stop();
     context.close();
