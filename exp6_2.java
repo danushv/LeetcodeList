@@ -91,16 +91,16 @@ public class exp6_2 {
           //value of the input
           Iterable<Tuple2<Long, Iterable<Long>>> values = s._2;
           //hashSet to store which node is reachable
-          HashSet<Long> set = new HashSet<Long>();
+          HashSet<Long> s = new HashSet<Long>();
           for (Tuple2<Long, Iterable<Long>> value : values) {
-            set.add(value._1);
+            s.add(value._1);
           }
 
           //add possible triangle
           List<Tuple3<Long, Long, Long>> output = new ArrayList<Tuple3<Long, Long, Long>>();
           for (Tuple2<Long, Iterable<Long>> value : values) {
             for (Long x : value._2) {
-              if (set.contains(x)) {
+              if (s.contains(x)) {
                 Long[] tria = { key, value._1, x };
                 //sort the nodes in order to delete the duplicate later
                 Arrays.sort(tria);
