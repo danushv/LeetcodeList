@@ -99,13 +99,13 @@ public class exp6_2 {
           //add possible triangle
           List<Tuple3<Long, Long, Long>> output = new ArrayList<Tuple3<Long, Long, Long>>();
           for (Tuple2<Long, Iterable<Long>> value : values) {
-            for (Long nei : value._2) {
-              if (set.contains(nei)) {
-                Long[] tri = { key, value._1, nei };
+            for (Long x : value._2) {
+              if (set.contains(x)) {
+                Long[] tria = { key, value._1, x };
                 //sort the nodes in order to delete the duplicate later
-                Arrays.sort(tri);
+                Arrays.sort(tria);
                 output.add(
-                  new Tuple3<Long, Long, Long>(tri[0], tri[1], tri[2])
+                  new Tuple3<Long, Long, Long>(tria[0], tria[1], tria[2])
                 );
               }
             }
@@ -116,11 +116,11 @@ public class exp6_2 {
     );
 
     //eliminate duplicate triangles
-    JavaRDD<Tuple3<Long, Long, Long>> temp3 = temp2.distinct();
+    JavaRDD<Tuple3<Long, Long, Long>> t3 = temp2.distinct();
 
     //Store the number of triangle
     List<Long> list = new ArrayList<Long>();
-    list.add(temp3.count());
+    list.add(t3.count());
     JavaRDD<Long> result = context.parallelize(list);
 
     //save
