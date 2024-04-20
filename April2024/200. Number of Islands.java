@@ -4,7 +4,7 @@ class Solution {
         if(grid.length==0||grid==null)
         return 0;
         int nr=grid.length;
-        int nc=grid[0].length;
+        int nc=grid[0].length; 
         int numOfIsland=0;
         for(int r=0;r<nr;r++)
         {
